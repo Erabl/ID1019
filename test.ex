@@ -76,14 +76,18 @@ defmodule Test do
     end
   end
 
+  def godtycklig(whatever) do
+    {:a, 3}
+  end
+
   def nth(0,[head|_]) do head end
   def nth(n,[_|tail]) do
-    nth(n-1,tail)
+      nth(n-1,tail)
   end 
 
   def len([]) do 0 end
   def len([_|tail]) do 
-    len(tail)+1
+      len(tail)+1
   end
 
   def sum([]) do 0 end
@@ -128,27 +132,92 @@ defmodule Test do
     end
    end 
 
-def unique([]) do [] end
-def unique([h|t]) do
-  l= remove(h, [h|t])
-  p = unique(l)
-  add(h,p)
-end
+  def unique([]) do [] end
+  def unique([h|t]) do
+    l= remove(h, [h|t])
+    p = unique(l)
+    add(h,p)
+  end
 
-def reverse([]) do [] end
-def reverse([h|t]) do
-    l = reverse(t)
-    add(h,l)
+   def reverse([]) do [] end
+   def reverse([h|t]) do
+     l = reverse(t)
+     add(h,l)
+
+   end
+  #   # Så jag tog och kopierade upp listan len(unique(l))
+  #   # antal gånger och sedan rensade jag varje lista för sig
+  def pack([])do [] end
+  def pack([h|t]) do 
+
+   p = [preserve(h,[h|t])|pack(remove(h,t))]
+  end
+  
+  def insert(x,[]) do [x] end
+  def insert(x,[h|t]) do 
+   cond do
+       x<=h ->
+        [x|[h|t]]
+       x>h ->
+        [h|insert(x,t)]
+  end
+  end
+
+    def isort(l) do
+      isort(l,[])
+     end
+  
+   def isort([],l) do l end
+   def isort([h|t],sorted) do
+       isort(t,insert(h,sorted))
+     end  
+
+   def member(n,[])do :false end
+   def member(n,[h|t]) do 
+     cond do
+       n==h ->
+         :true
+       n!=h ->
+         member(n,t)  
+     end
+   end 
+   end 
+    #  cond do
+    #    sorted == [] ->
+    #    sorted
+
+    #    [h|t] ->
+    #      l=insert(h,sorted)
+    #      isort(t,sorted)
+
+    #    end
+
+# def msort(l) do
+#   case ... do
+#   ... ->
+#   ...
+#   ... ->
+#   {.., ...} = msplit(l, [], [])
+#   merge(msort(...), msort(...))
+#   end
+#   end
+# def merge(..., ...) do ... end
+# def merge(..., ...) do ... end
+# def merge(..., ...) do
+#   if ...
+#   merge(.., ...)
+#   else
+#   merge(.., ...)
+# end
+# end
+# def msplit(..., ..., ...) do
+#   case ... do
+#   ... ->
+#   {..., ...}
+#   ... ->
+#   msplit(..., ..., ...)
+# end
+# end
 
 
-end
-# Så jag tog och kopierade upp listan len(unique(l))
-# antal gånger och sedan rensade jag varje lista för sig
-def pack([])do [] end
-def pack(l) do 
 
-end
-# def do 
-
-
- end
