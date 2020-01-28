@@ -14,7 +14,7 @@ defmodule Huffman do
 
   def test do
     sample = sample()
-    tree = tree(sample)
+    # tree = tree(sample)
     encode = encode_table(tree)
     decode = decode_table(tree)
     text = text()
@@ -22,11 +22,12 @@ defmodule Huffman do
     decode(seq, decode)
   end
 
-  def tree(sample) do
+  def tree() do
     # To implement...
     freq = freq(sample)
-    # Huffman(freq)
+    huffman(freq,[])
   end
+
 
   def encode_table(tree) do
     # To implement...
@@ -43,11 +44,18 @@ defmodule Huffman do
   def decode(seq, tree) do
     # To implement...
   end
+   
+  def huffman([],l) do l end
+  def huffman([{a,x},{b,y}|t],[]) do huffman([{a,x},{b,y}|t],_) end
+  def huffman([{a,x},{b,y}|t],l) do
+    iinsert({{a,b},(x+y)}, l)
+    huffman(t,l)
+  end
 
   def freq(sample) do
    freq(sample,[])
   end
-  def freq([], freq) do huffsort(freq) end
+  def freq([], freq) do huffsort(freq,[]) end
   def freq([c|r], [])do freq(r,[{c,1}]) end 
   def freq([c|r], l) do
    
@@ -55,11 +63,9 @@ defmodule Huffman do
    l = remove({c, x-1}, l)
    l = append(l, [{c, x}])
    freq(r,l)
-#    you freqqing freqz, when will you learn, when will you learn, 
-#    T H A T  Y O U R  A C T I O N S  H A V E  C O N S E Q U E N C E SA
   end
-def membr([],n) do [{n,1}] end
-def membr([{h,v}|t],n)do
+ def membr([],n) do [{n,1}] end
+ def membr([{h,v}|t],n)do
     cond do
     n==h ->
       [{h,v+1}]
@@ -67,9 +73,9 @@ def membr([{h,v}|t],n)do
        membr(t,n)
 
     end
-end
-  def member(n,[])do :false end
-  def member(n,[h|t]) do 
+ end
+ def member(n,[])do :false end
+ def member(n,[h|t]) do 
      cond do
        n==h ->
          :true
@@ -77,29 +83,29 @@ end
          member(n,t)  
      end
    end 
-  def append([],y) do y end
-  def append([h|t],y) do
+ def append([],y) do y end
+ def append([h|t],y) do
    [h|append(t,y)]
   end
     def unique([]) do [] end
-  def unique([h|t]) do
+ def unique([h|t]) do
     l= remove(h, [h|t])
     p = unique(l)
     add(h,p)
   end
 
-   def reverse([]) do [] end
-   def reverse([h|t]) do
+ def reverse([]) do [] end
+ def reverse([h|t]) do
      l = reverse(t)
      add(h,l)
 
    end
-  def pack([])do [] end
-  def pack([h|t]) do 
+ def pack([])do [] end
+ def pack([h|t]) do 
    p = [preserve(h,[h|t])|pack(remove(h,t))]
   end
-  def remove(_,[]) do [] end
-  def remove(x, [h|t]) do  
+ def remove(_,[]) do [] end
+ def remove(x, [h|t]) do  
      cond do
        x== h ->
        remove(x,t)
@@ -108,23 +114,27 @@ end
      end
      end
 
-  def len([]) do 0 end
-  def len([_|tail]) do len(tail)+1 end
+ def len([]) do 0 end
+ def len([_|tail]) do len(tail)+1 end
 
-  def huffsort([l])do huffsort(l,[]) end
-  def huffsort([],l) do l end
-  def huffsort([h|t],sorted) do huffsort(t,inserth(h,sorted)) end
+ def huffsort([l])do huffsort(l,[]) end
+ def huffsort([],l) do l end
+ def huffsort([h|t],sorted) do huffsort(t,inserth(h,sorted)) end
 
-  
-  def inserth(x,[]) do [x] end
-  def inserth({n,x},[{h,y}|t]) do
+ def iinsert(x,[]) do [x] end
+ def iinsert() do end
+
+
+ def inserth(x,[]) do [x] end
+#  def inserth()
+ def inserth({n,x},[{h,y}|t])do
       cond do
       x<= y ->
         [{n,x},{h,y}|t]
       x>y ->
         [{h,y}|inserth({n,x},t)]  
-      end  
-   end
+    end  
+  end
   def insert(x,[]) do [x] end
   def insert(x,[h|t]) do 
    cond do
