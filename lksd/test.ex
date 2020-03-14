@@ -62,11 +62,12 @@ defmodule Test do
    
     end
   end
-
-  def godtycklig(whatever) do {:a, 3} end
+  def hp35()
 
   def nth(0,[head|_]) do head end
   def nth(n,[_|tail]) do nth(n-1,tail) end 
+  
+
 
   def len([]) do 0 end
   def len([_|tail]) do len(tail)+1 end
@@ -87,7 +88,7 @@ defmodule Test do
      [h | add(x, t)]
 
   end   
-          end
+  end
   def remove(_,[]) do [] end
   def remove(x, [h|t]) do  
      cond do
@@ -136,7 +137,7 @@ defmodule Test do
   end
   end
 
-  def isort(l) doisort(l,[]) end
+  def isort(l) do isort(l,[]) end
   
   def isort([],l) do l end
   def isort([h|t],sorted) do isort(t,insert(h,sorted)) end  
@@ -151,8 +152,37 @@ defmodule Test do
      end
    end 
 
-   
 
+def decode([h|t]) do decode([h|t],[]) end
+def decode([],[h|t]) do [h|t] end
+def decode([{c,n}|t],l) do
+  li= appendN({c,n},l)
+  decode(t, li)
+end   
+def appendN({c,0},[h|t]) do [h|t] end
+def appendN({c,n},l) do 
+    p=append(c,l)
+    appendN({c,n-1},p)
+end
+def append(x,[]) do [x] end
+def append(x,[h|t])do
+   [h| append(x,t)]
+end
+
+
+def zip([],[],l) do l end
+def zip(l,ll) do zip(l,ll, []) end
+def zip([h1|t1],[h2|t2],l) do
+  zip(t1,t2,append({h1,h2},l))
+ end
+
+def eval({:add, x, y}) do eval(x) + eval(y) end
+def eval({:mul, x, y}) do eval(x)*eval(y) end
+def eval({:sub, x, y}) do eval(x) - eval(y) end
+def eval({:div, x, y}) do div(eval(x),eval(y)) end
+def eval({:neg, x}) do -1*x end 
+def eval(n) do n end 
+def eval({:int, n}) do n end
 
 def drop([h|t], 0) do [t] end #plocka ut resten
 def drop([h|t], n) do [h|drop(t, n-1)] end    #vi vill inte ta bort head så vi gör samma sak igen fast på svansen
@@ -161,59 +191,80 @@ def rotate([h|t], n) do rotate([h|t], n, [])  end
 def rotate([h|t],0,first) do append([h|t],reverse(first)) end
 def rotate([h|t],n,first) do rotate(t,n-1,[h|first]) end
 
-def nth(1,{:leaf, val}) do {:found, val} end     #kolla om vi har ett löv eller en nod
-#def nth(n,{:leaf, _ }) do nth(n-1,{}) end     #Vi måste representera resten?   #how2writeTrees
-def nth(n,{:node,left,right}) do                        #Traversera Trädet yo
-    cond do
+def hp35([h|t]) do hp35(t,[h]) end
+def hp35([],l)  do l end
+def hp35([h|t],l= [a]) do hp35(t,[h|l])  end
+def hp35([h|t],l =[a,b|t1]) do
+  cond do
+    h == :add ->
+     hp35(t, l = [a+b|t1])
+    h == :sub ->
+      hp35(t,l = [b-a|t1])
+    true ->
+      hp35([t],[h|l])
+    
+end
+end
 
-    cond
+def nth(1,{:leaf,c})do {:found,c} end
+def nth(n,{:leaf, c}) do {:cont, n-1} end
+def nth(n,{:node, left, right}) do 
+  
+    case nth(n,left) do
+      {:cont,val}->
+         nth(val,right)
+      {:found,val}->
+        {:found,val}
 
-end    
+    end
 
-def hp35() do end
+end
 
-def pascal() do end
+# def hp35() do end
+def pascal(1) do [1] end
+def pascal(n) do
+  [1|next(pascal(n-1))]
+end
+def next([h])do [h] end 
+def next([h|t])do
+ [b|_] = t
+ [h+b|next(t)]
+end
+end
 
 
 
-
-end 
-
-
-
-
-
-
-#  cond do
-#    sorted == [] ->
-#    sorted
-#    [h|t] ->
-#      l=insert(h,sorted)
-#      isort(t,sorted)
-#    end
-# def msort(l) do
-#   case ... do
-#   ... ->
-#   ...
-#   ... ->
-#   {.., ...} = msplit(l, [], [])
-#   merge(msort(...), msort(...))
-#   end
-#   end
-# def merge(..., ...) do ... end
-# def merge(..., ...) do ... end
-# def merge(..., ...) do
-#   if ...
-#   merge(.., ...)
-#   else
-#   merge(.., ...)
+# def member(e, {:node, e, _, _}) do :yes end
+# def member(e, {:node, v, left, _}) when e < v do
+#        member(e,left)
 # end
+# def member(e, {:node, _, _, right})  do
+#        member(e,right)
 # end
-# def msplit(..., ..., ...) do
-#   case ... do
-#   ... ->
-#   {..., ...}
-#   ... ->
-#   msplit(..., ..., ...)
+
+# def insert(e, :nil)  do  {:leaf, e}  end
+# def insert(e, {:leaf, v}) when e < v  do  {:node,v, {:leaf, e},:nil}  end
+# def insert(e, {:leaf, v}) do {:node,v,:nil,{:leaf,e}} end
+# def insert(e, {:node, v, left, right }) when e < v do
+#    {:node,v,insert(e,left),right}
 # end
+# def insert(e, {:node, v, left, right })  do
+#   {:node, v,left,insert(e,right)}
+# end
+
+# def reightmost({:leaf, e}) do e end
+# def reightmost({:node, _, _ , right}) do  reightmost(right)  end
+
+# def delete(e, {:leaf, e}) do  {:nil}  end
+# def delete(e, {:node, e, :nil, right}) do right end
+# def delete(e, {:node, e, left, :nil}) do  left  end
+# def delete(e, {:node, e, left, right}) do
+#  {:node,reightmost(left), delete(reightmost(left),left), right}
+   
+# end
+# def delete(e, {:node, v, left, right}) when e < v do
+#     {:node, v, delete(e,left), right}
+# end
+# def delete(e, {:node, v, left, right})  do
+#     {:node, v,  left,  delete(e,right)}
 # end
